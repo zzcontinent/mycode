@@ -1,0 +1,13 @@
+- sudo mknod /dev/hellodev c 231 0
+
+- make
+
+- gcc testhello.c
+
+- sudo insmod hellomodule.ko
+
+- dmesg -Tx -l emerg
+
+- sudo ./a.out
+
+- dmesg -Tx -l emerg

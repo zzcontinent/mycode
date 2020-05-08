@@ -1,0 +1,38 @@
+<ul>
+<li>base on python 3.6.7 </li>
+<li>environment install run:
+<code>
+$ cd web_server
+$ pip install -r req.txt
+$ python server.py
+$ python test.py
+</code></li>
+<li>console outputs are as follows:
+```
+server stdout:
+[D 190526 12:44:05 <strong>init</strong>:15] app.api<em>1</em>0
+[D 190526 12:44:05 <strong>init</strong>:20] app.api<em>1</em>0.auth_handler
+[('/auth/login', <class 'app.api_1_0.auth_handler.AuthLoginHandler'>), ('/auth/logout', <class 'app.api_1_0.auth_handler.AuthLogoutHandler'>)]
+[I 190526 12:44:15 web:2162] 200 POST /auth/login (127.0.0.1) 0.79ms
+[I 190526 12:45:00 web:2162] 200 POST /auth/login (127.0.0.1) 0.52ms
+[I 190526 12:45:00 web:2162] 200 GET /auth/logout (127.0.0.1) 0.59ms
+[I 190526 12:46:02 web:2162] 200 POST /auth/login (127.0.0.1) 0.54ms
+[I 190526 12:46:02 web:2162] 200 GET /auth/logout (127.0.0.1) 0.53ms
+[I 190526 12:46:02 web:2162] 200 POST /auth/login (127.0.0.1) 0.44ms
+[I 190526 12:46:02 web:2162] 200 GET /auth/logout (127.0.0.1) 0.41ms
+[I 190526 12:46:09 web:2162] 200 POST /auth/login (127.0.0.1) 0.65ms
+[I 190526 12:46:09 web:2162] 200 GET /auth/logout (127.0.0.1) 0.45ms
+[I 190526 12:46:09 web:2162] 200 POST /auth/login (127.0.0.1) 0.46ms
+[W 190526 12:46:09 web:2162] 405 POST /auth/logout (127.0.0.1) 0.38ms
+[I 190526 12:47:07 web:2162] 200 POST /auth/login (127.0.0.1) 0.58ms
+[I 190526 12:47:07 web:2162] 200 GET /auth/logout (127.0.0.1) 0.53ms
+[I 190526 12:47:07 web:2162] 200 POST /auth/login (127.0.0.1) 0.49ms
+[W 190526 12:47:07 web:2162] 405 POST /auth/logout (127.0.0.1) 0.38ms</li>
+</ul>
+
+<p>client stdout:
+{"code": 0, "msg": "成功", "data": {"uid": 65535, "exp": 1558881969, "at": 1558845969}}
+{"code": 0, "msg": "成功", "data": {"is_ok": 1, "say": "see you !"}}
+{"code": 401001, "msg": "用户不存在或密码错误", "data": {}}
+<html><title>405: Method Not Allowed</title><body>405: Method Not Allowed</body></html>
+```</p>

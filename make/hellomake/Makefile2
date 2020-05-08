@@ -1,0 +1,80 @@
+#color
+BLACK = "\e[30;1m"
+RED  =  "\e[31;1m"
+GREEN = "\e[32;1m"
+YELLOW = "\e[33;1m"
+BLUE  = "\e[34;1m"
+PURPLE = "\e[35;1m"
+CYAN  = "\e[36;1m"
+WHITE = "\e[37;1m"
+DONE    = "\033[0m"
+
+#compile
+CROSS := aarch64-himix100-linux-
+CC :=  $(CROSS)gcc
+CPP := $(CROSS)g++
+CFLAGS := -g
+CFLAGS += -Wall
+CFLAGS += -lpthread
+
+CPPFLAGS := -g
+CPPFLAGS += -Wall
+CPPFLAGS += -std=c++11
+CPPFLAGS += -lpthread
+
+#link
+LINK := $(CPP)
+LIBS := -pthread
+
+#src files
+SRCS_CPP := $(wildcard ./*.cpp)
+SRCS_CPP += $(wildcard ./Board59HMV3/*.cpp)
+SRCS_C   = $(wildcard ./Board59HMV3/hi_gpio_sdk/*.c)
+#common src
+SRCS_C   += $(wildcard ../../common/SDL/src/*.c)
+SRCS_C   += $(wildcard ../../common/SDL/src/thread/*.c)
+SRCS_C   += $(wildcard ../../common/SDL/src/thread/pthread/*.c)
+SRCS_C   += $(wildcard ../../common/SDL/src/timer/*.c)
+SRCS_C   += $(wildcard ../../common/SDL/src/timer/unix/*.c)
+SRCS_C   += $(wildcard ../../common/FGUtil/*.c)
+
+#include
+INCS := -I./
+INCS += -I./Board59HMV3 
+INCS += -I./Board59HMV3/hi_gpio_sdk
+INCS += -I../../common/SDL/include
+
+#target objs
+TARGET := test
+OBJS_CPP := $(patsubst %.cpp,%.o,$(SRCS_CPP))
+OBJS_C   := $(patsubst %.c,%.o,$(SRCS_C))
+
+#cmd build
+$(TARGET): $(OBJS_C) $(OBJS_CPP)
+	@echo -e $(RED)"LINK START"$(DONE)
+	$(LINK) -o $@ $(OBJS_C) $(OBJS_CPP) $(LIBS)
+	@echo -e $(GREEN)"LINK END"$(DONE)
+
+%.o:%.c
+	@echo -e $(RED)"C START"$(DONE)
+	$(CC) -c -o $@ $< $(CFLAGS) $(INCS)
+	@echo -e $(GREEN)"C END"$(DONE)
+
+%.o:%.cpp
+	@echo -e $(RED)"CPP START"$(DONE)
+	$(CPP) -c -o $@ $< $(CPPFLAGS) $(INCS)
+	@echo -e $(GREEN)"CPP END"$(DONE)
+
+
+print:
+	#$(OBJS_CPP)
+	#$(OBJS_C)
+
+clean: 
+	-rm ${OBJS_CPP} ${OBJS_C}
+
+FORCE:
+
+PHONY += FORCE
+
+.PHONY: $(PYONY)

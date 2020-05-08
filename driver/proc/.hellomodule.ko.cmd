@@ -1,0 +1,1 @@
+cmd_/home/cliff/Projects/CWorkspace/mycode/driver/proc/hellomodule.ko := ld -r -m elf_x86_64  -z max-page-size=0x200000 -T ./scripts/module-common.lds  --build-id  -o /home/cliff/Projects/CWorkspace/mycode/driver/proc/hellomodule.ko /home/cliff/Projects/CWorkspace/mycode/driver/proc/hellomodule.o /home/cliff/Projects/CWorkspace/mycode/driver/proc/hellomodule.mod.o ;  true
