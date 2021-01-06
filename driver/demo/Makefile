@@ -1,4 +1,4 @@
-MODULE_NAME = hellomodule
+MODULE_NAME = hello_mod
 $(MODULE_NAME)-objs := hello.o
 obj-m := $(MODULE_NAME).o
 KERNEL_DIR = /usr/src/linux-headers-`uname -r`

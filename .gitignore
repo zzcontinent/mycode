@@ -1,1 +1,9 @@
 *tags
+*.cmd
+*.o
+*.mod
+*.mod.o
+*.a
+*.ko
+*.order
+

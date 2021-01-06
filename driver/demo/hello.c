@@ -5,7 +5,7 @@
 #include <linux/delay.h>
 
 #define HELLO_MAJOR 231
-#define DEVICE_NAME "helloworld"
+#define DEVICE_NAME "hello"
 
 static int hello_open(struct inode *inode, struct file* filp)
 {
