@@ -22,11 +22,13 @@ int main(int argc,char *argv[])
  
 	//将接收端口号并转换为int
 	int port = atoi(argv[1]);
+	/*
 	if( port<1025 || port>65535 )//0~1024一般给系统使用，一共可以分配到65535
 	{
 		printf("端口号范围应为1025~65535");
 		return -1;
 	}
+	*/
 	
 	// 1.创建udp通信socket  
 	int udp_socket_fd = socket(AF_INET,SOCK_DGRAM,0);
