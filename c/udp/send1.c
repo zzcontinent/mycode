@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 #include <unistd.h>
 
 #include <arpa/inet.h>
@@ -20,7 +21,8 @@ int main(int argc, char* argv[])
 
 	//接收端口号并转换为int
 	int port = atoi(argv[2]);
-	/*if (port < 1025 || port > 65535) //0~1024一般给系统使用，一共可以分配到65535
+	/*
+	if (port < 1025 || port > 65535) //0~1024一般给系统使用，一共可以分配到65535
 	{
 		printf("端口号范围应为1025~65535");
 		return -1;
@@ -48,19 +50,17 @@ int main(int argc, char* argv[])
 	bro_addr.sin_port = htons(port);
 	bro_addr.sin_addr.s_addr = inet_addr(argv[1]); //设置为广播地址
 
-	char buf[1024] = { 0 }; //消息缓冲区
+	char * buf = malloc(1024000); //消息缓冲区
 
 	//4 发送数据
-	while (1) {
-		//printf("Please input broadcast msg:");
-		scanf("%s", buf); //获取要发送的消息
+	//printf("Please input broadcast msg:");
+	scanf("%s", buf); //获取要发送的消息
+	printf("send:%d\n",strlen(buf));
+	while(1)
+	{
 		sendto(udp_socket_fd, buf, strlen(buf), 0, (struct sockaddr*)&bro_addr, sizeof(bro_addr));
-		if (strcmp(buf, "exit") == 0) {
-			break; //退出循环
-		}
-		bzero(buf, sizeof(buf));
 	}
-
+	bzero(buf, sizeof(buf));
 	//5.关闭网络通信
 	close(udp_socket_fd);
 
