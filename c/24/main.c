@@ -30,7 +30,7 @@ void iterSeq(int* in, int cnt)
 				in[j] = tmp;
 				sort(in+j+1, cnt-j-1);
 				return;
-			} 
+			}
 		}
 	}
 }
@@ -41,18 +41,18 @@ void sort(int* in, int cnt)
 	{
 		for(int j=i+1;j<cnt;j++)
 		{
-			if (in[i] < in[j])	
+			if (in[i] < in[j])
 			{
 				int tmp=in[i];
 				in[i] = in[j];
-				in[j] = tmp; 
+				in[j] = tmp;
 			}
 		}
 	}
 	for (int i = 0;i<cnt/2;i++)
 	{
 		int tmp = in[i];
-		in[i] = in[cnt - 1 -i];	
+		in[i] = in[cnt - 1 -i];
 		in[cnt - 1 - i] = tmp;
 	}
 }
@@ -60,7 +60,7 @@ void sort(int* in, int cnt)
 int getmin_pos(int* in, int cnt)
 {
 	if (cnt == 0)
-		return 0; 
+		return 0;
 
 	int min_pos  = 0;
 	for (int i = 0;i<cnt;i++)
@@ -112,7 +112,6 @@ void main(int argc, char* argv[])
 		printf("input 4 number");
 		return;
 	}
-	
 	int in[4];
 	in[0]=atoi(argv[1]);
 	in[1]=atoi(argv[2]);
