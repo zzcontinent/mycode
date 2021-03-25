@@ -1,0 +1,100 @@
+1. static 全局变量与普通的全局变量有什么区别？
+==> 作用域不同, static 只在本文件可见, 非static则全局可见
+
+2. 简单描述 typedef 与 #define 的区别
+==> typedef时类型别名，#define时宏替换,可以利用编译器展开，减少函数调用成本
+
+3. 写一个宏 MIN 应有计算两个变量中较小的变量
+==> define MIN(A,B) ({ typeof(A) __a = (A); typeof(B) __b = (B); __a < __b ? __a : __b; })
+
+4. 简单描述 volatile 的作用；一个变量是否既可以是 const 又可以是 volatile？
+==> volatile告诉编译器不可以对其修饰的变量进行优化，每次使用的时候都要到内存中去取。
+==> 可以，比如const volatile char *port = (const volatile char *)0x00ff;
+
+5. 分别写出 BOOL, int, float,指针 类型的变量 a 与“零”的比较语句
+==> bool: 
+if ( a )
+if ( !a )
+==> int: 
+if ( a == 0 )
+if ( a != 0 )
+==> pointer:
+if (a == NULL)
+if (a != NULL)
+==> float:
+const float PRICISON = 0.00001;
+if ((a >= - PRICISON) && (a <= PRICISON)
+
+6.下面的语句会出现什么结果？ 
+void test1(){ 
+char szstr[10]; 
+char* str1 = "0123456789"; 
+strcpy(szstr,str1); 
+} 
+==> 拷贝多了一个\0，正常不会报错，如果栈不足，则可能报栈溢出
+#define MAX 128
+ int main(){
+ char A[MAX],i;
+ for (i=0;i<=MAX;i++)
+ A[i]=i;
+printf("%d",i);
+} 
+==> 陷入死循环，因为i时char型，溢出后会变负数，循环往复
+
+
+7. 写出结果 sizeof(struct name1)= ；sizeof(struct name2)= ；
+#pragma pack(4)
+struct name1{
+ char str;
+ short x;
+ int num;
+}
+
+struct name2{
+ char str;
+ int num;
+ short x;
+}
+#pragma pack() 
+==> sizeof(struct name1)= 8；sizeof(struct name2)= 12；
+
+8. 写两段代码，第一个设置整数 a 的 bit 3，第二个清除整数 a 的 bit 3。在以上两个操作中，要保持其它位不变
+==> 
+int a = 0xffff;
+a = a | 0x8;
+==> 
+int a = 0xffff;
+a = a & (~0x8);
+
+9. 写一个函数，判断 CPU 大小端；
+int isBigEnd()
+{
+    int x = 0x1234;
+    char* p = (char*)&x;
+    printf("%x,%x\n", (int)p[0], (int)p[1]);
+    if (p[0] == 0x34) {
+	printf("little endian\n");
+	return 0;
+    } else {
+	printf("big endian\n");
+	return 1;
+    }
+}
+
+10. 写一个内存拷贝函数，不用任何库函数
+char* memcpy(char* dest, const char* source, int length)
+{
+    char* ret = dest;
+    //  判是否为空
+    if (0 == source || 0 == dest) {
+	return dest;
+    }
+    while (length) {
+	*dest = *source;
+	source++;
+	dest++;
+	length--;
+    }
+    return ret;
+}
+
