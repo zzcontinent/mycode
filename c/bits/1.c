@@ -1,7 +1,7 @@
 #include <stdio.h>
 
-union BitTest {
-	unsigned int v;
+union reg1 {
+	unsigned char v;
 	struct {
 		unsigned a:3;
 		unsigned b:1;
@@ -9,11 +9,14 @@ union BitTest {
 	} bits;
 };
 
+struct AllReg {
+	union reg1 reg11;
+	union reg1 reg22;
+};
+
 int main(void)
 {
-	union BitTest test= {.v = 0};
-	test.bits.a = 7;
-	test.bits.b = 0;
-	test.bits.c = 15;
-	printf("%x\n", test.v);
+	struct AllReg test= { .reg11 = {.bits.a = 7, .bits.b=0, .bits.c = 15}, .reg22 = { .bits.a = 7, .bits.b=0, .bits.c=15}};
+	printf("%x\n", test.reg11.v);
+	printf("%x\n", test.reg22.v);
 }
