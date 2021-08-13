@@ -2,9 +2,9 @@
 #define __UALLOC_C__
 
 #define u8 unsigned char
-#define U_PAGE 32
-#define U_PAGE_CNT 256
-#define U_BUF_LEN U_PAGE_CNT*U_PAGE
+#define U_PAGE_SIZE 128
+#define U_PAGE_CNT 512
+#define U_BUF_LEN U_PAGE_CNT*U_PAGE_SIZE
 
 static u8 ubuf[U_BUF_LEN] = {0};
 static int ubuf_free_list[U_PAGE_CNT] = {0};
@@ -12,9 +12,9 @@ static int ubuf_free_list[U_PAGE_CNT] = {0};
 #define FREE_FLAG 0
 #define PAD_FLAG -1
 
-u8* ualloc(int len)
+void* ualloc(int len)
 {
-	int page_cnt = len%U_PAGE == 0 ? len/U_PAGE : len/U_PAGE+1;
+	int page_cnt = len%U_PAGE_SIZE == 0 ? len/U_PAGE_SIZE : len/U_PAGE_SIZE+1;
 	int i=0;
 	for (i=0; i<U_PAGE_CNT; i+=2)
 	{
@@ -36,16 +36,16 @@ u8* ualloc(int len)
 				ubuf_free_list[i+k] = PAD_FLAG;
 			}
 			ubuf_free_list[i] = len;
-			return ubuf + i*U_PAGE;
+			return ubuf + i*U_PAGE_SIZE;
 		}
 	}
 	return 0;
 }
 
-void ufree(u8* addr)
+void ufree(void* addr)
 {
-	int pos = (addr - ubuf)/U_PAGE;
-	int page_cnt = ubuf_free_list[pos];
+	int pos = ((u8*)addr - ubuf)/U_PAGE_SIZE;
+	int page_cnt = ubuf_free_list[pos]/U_PAGE_SIZE;
 	int j=0;
 	for(j=0; j<page_cnt;j++)
 	{
@@ -53,7 +53,7 @@ void ufree(u8* addr)
 	}
 }
 
-void print_msg()
+void uprint_msg()
 {
 	int i = 0;
 	for (i=0; i< U_PAGE_CNT; i++)
