@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <unistd.h>
 #include "ualloc.c"
 
 int usplit(char *src, char **out)
@@ -116,18 +117,35 @@ int exec_command(char *cmd)
 {
 	char *split_cmds[20];
 	int ret = usplit(cmd, split_cmds);
+	if (ret <= 0)
+		return -1;
 	if (ustrcmp(split_cmds[0], "mm4") || ustrcmp(split_cmds[0], "mm"))
 	{
 		if (ret == 2)
 		{
 			unsigned long waddr = str2n(split_cmds[1]);
+			if (waddr == -1)
+			{
+				printf("param error:[%s]\n", split_cmds[1]);
+				return -1;
+			}
 			printf("read: 0x%lx ==> ", waddr);
 			printf("0x%x\n", *(volatile unsigned int *)(waddr));
 			ufree(split_cmds[0]);
 			return 0;
 		} else if (ret == 3) {
 			unsigned long waddr = str2n(split_cmds[1]);
+			if (waddr == -1)
+			{
+				printf("param error:[%s]\n", split_cmds[1]);
+				return -1;
+			}
 			unsigned long wdata = str2n(split_cmds[2]);
+			if (wdata == -1)
+			{
+				printf("param error:[%s]\n", split_cmds[1]);
+				return -1;
+			}
 			printf("write: 0x%lx <== 0x%lx\n", waddr, wdata);
 			*(volatile unsigned int*)(waddr) = wdata;
 			ufree(split_cmds[0]);
@@ -137,13 +155,28 @@ int exec_command(char *cmd)
 		if (ret == 2)
 		{
 			unsigned long waddr = str2n(split_cmds[1]);
+			if (waddr == -1)
+			{
+				printf("param error:[%s]\n", split_cmds[1]);
+				return -1;
+			}
 			printf("read: 0x%lx ==> ", waddr);
 			printf("0x%x\n", *(volatile unsigned char *)(waddr));
 			ufree(split_cmds[0]);
 			return 0;
 		} else if (ret == 3) {
 			unsigned long waddr = str2n(split_cmds[1]);
+			if (waddr == -1)
+			{
+				printf("param error:[%s]\n", split_cmds[1]);
+				return -1;
+			}
 			unsigned long wdata = str2n(split_cmds[2]);
+			if (wdata == -1)
+			{
+				printf("param error:[%s]\n", split_cmds[1]);
+				return -1;
+			}
 			printf("write: 0x%lx <== 0x%lx\n", waddr, wdata);
 			*(volatile unsigned char*)(waddr) = wdata;
 			ufree(split_cmds[0]);
@@ -153,13 +186,28 @@ int exec_command(char *cmd)
 		if (ret == 2)
 		{
 			unsigned long waddr = str2n(split_cmds[1]);
+			if (waddr == -1)
+			{
+				printf("param error:[%s]\n", split_cmds[1]);
+				return -1;
+			}
 			printf("read: 0x%lx ==> ", waddr);
 			printf("0x%x\n", *(volatile unsigned short *)(waddr));
 			ufree(split_cmds[0]);
 			return 0;
 		} else if (ret == 3) {
 			unsigned long waddr = str2n(split_cmds[1]);
+			if (waddr == -1)
+			{
+				printf("param error:[%s]\n", split_cmds[1]);
+				return -1;
+			}
 			unsigned long wdata = str2n(split_cmds[2]);
+			if (wdata == -1)
+			{
+				printf("param error:[%s]\n", split_cmds[1]);
+				return -1;
+			}
 			printf("write: 0x%lx <== 0x%lx\n", waddr, wdata);
 			*(volatile unsigned short*)(waddr) = wdata;
 			ufree(split_cmds[0]);
@@ -169,23 +217,72 @@ int exec_command(char *cmd)
 		if (ret == 2)
 		{
 			unsigned long waddr = str2n(split_cmds[1]);
+			if (waddr == -1)
+			{
+				printf("param error:[%s]\n", split_cmds[1]);
+				return -1;
+			}
 			printf("read: 0x%lx ==> ", waddr);
 			printf("0x%lx\n", *(volatile unsigned long *)(waddr));
 			ufree(split_cmds[0]);
 			return 0;
 		} else if (ret == 3) {
 			unsigned long waddr = str2n(split_cmds[1]);
+			if (waddr == -1)
+			{
+				printf("param error:[%s]\n", split_cmds[1]);
+				return -1;
+			}
 			unsigned long wdata = str2n(split_cmds[2]);
+			if (wdata == -1)
+			{
+				printf("param error:[%s]\n", split_cmds[1]);
+				return -1;
+			}
 			printf("write: 0x%lx <== 0x%lx\n", waddr, wdata);
 			*(volatile unsigned long*)(waddr) = wdata;
 			ufree(split_cmds[0]);
 			return 0;
 		}
+	} else if (ustrcmp(split_cmds[0], "exit")){
+		printf("exit command!\n");
+		return -2;
 	} else {
 		printf("command illegal, format: mm[1/2/4/8] xxx [yyy]\n");
 	}
 	ufree(split_cmds[0]);
 	return -1;
+}
+
+int wait_uart_exec_command()
+{
+	char cmd_buf[200] = {0};
+	u8 cur_ch = 0;
+	int cnt = 0;
+	while(1)
+	{
+		int tmp_read_cnt = read(0, cmd_buf+cnt, 1);
+		cnt += tmp_read_cnt;
+		if (tmp_read_cnt == 0 && cmd_buf[cnt-1] == '\n')
+		{
+			cmd_buf[cnt-1] = 0;
+			cnt = 0;
+			printf("[%s]\n", cmd_buf);
+			if (-2 == exec_command(cmd_buf))
+			{
+				break;
+			}
+		}
+	}
+	return 0;
+}
+
+int main(int argc, char**argv)
+{
+	char test_buf[100] = "abcdefghiklmn";
+	printf("0x%lx, %s\n", (unsigned long)test_buf, test_buf);
+	wait_uart_exec_command();
+	return 1;
 }
 
 
@@ -198,8 +295,8 @@ int exec_command(char *cmd)
 //	printf("%s\n", cmd_buf);
 //	exec_command(cmd_buf);
 //
-//	char *wcmd = "mm 0x%lx 0x%lx";
-//	sprintf(cmd_buf, wcmd, testbuf, 0x41424344);
+//	char *wcmd = "mm 0x%lx %d";
+//	sprintf(cmd_buf, wcmd, testbuf, 12345);
 //	printf("%s\n", cmd_buf);
 //	exec_command(cmd_buf);
 //	printf("%s\n", testbuf);
