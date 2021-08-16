@@ -17,8 +17,13 @@ int usplit(char *src, char **out)
 		{
 			//find head
 			phead = src;
+			ptail = src;
 			prechar = curchar;
-			src++;
+			if (*(++src) == 0)
+			{
+				ptail = src;
+				goto process_split_one;
+			}
 			continue;
 		} else if (prechar != ' ' && curchar == ' ') {
 			// find tail
@@ -30,8 +35,7 @@ int usplit(char *src, char **out)
 			// no head or tail found
 			ptail = src;
 			prechar = curchar;
-			src ++;
-			if (*src == 0)
+			if (*(++src) == 0)
 			{
 				ptail = src;
 				goto process_split_one;
@@ -279,6 +283,8 @@ int wait_uart_exec_command()
 
 int main(int argc, char**argv)
 {
+	printf("%d\n", exec_command("mm 0"));
+	return 1;
 	char test_buf[100] = "abcdefghiklmn";
 	printf("0x%lx, %s\n", (unsigned long)test_buf, test_buf);
 	wait_uart_exec_command();
