@@ -16,7 +16,7 @@ void* ualloc(int len)
 {
 	int page_cnt = len%U_PAGE_SIZE == 0 ? len/U_PAGE_SIZE : len/U_PAGE_SIZE+1;
 	int i=0;
-	for (i=0; i<U_PAGE_CNT; i+=2)
+	for (i=0; i<U_PAGE_CNT; i+=1)
 	{
 		int j = 0;
 		int found_cnt = 0;
@@ -45,7 +45,8 @@ void* ualloc(int len)
 void ufree(void* addr)
 {
 	int pos = ((u8*)addr - ubuf)/U_PAGE_SIZE;
-	int page_cnt = ubuf_free_list[pos]/U_PAGE_SIZE;
+	int len = ubuf_free_list[pos];
+	int page_cnt = len%U_PAGE_SIZE == 0 ? len/U_PAGE_SIZE : len/U_PAGE_SIZE+1;
 	int j=0;
 	for(j=0; j<page_cnt;j++)
 	{
@@ -56,6 +57,7 @@ void ufree(void* addr)
 void uprint_msg()
 {
 	int i = 0;
+	printf("----------\n");
 	for (i=0; i< U_PAGE_CNT; i++)
 	{
 		printf("%d:%d  ", i, ubuf_free_list[i]);
